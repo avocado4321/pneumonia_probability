@@ -1,0 +1,18 @@
+{
+  "name": "pediatric-pneumonia-bayes-calculator",
+  "version": "0.1.0",
+  "description": "Static Bayesian pediatric pneumonia probability calculator for educational use.",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test-bayes.mjs",
+    "check": "node tests/test-bayes.mjs"
+  },
+  "keywords": [
+    "pediatrics",
+    "pneumonia",
+    "bayesian",
+    "likelihood-ratio",
+    "medical-education"
+  ],
+  "license": "MIT"
+}

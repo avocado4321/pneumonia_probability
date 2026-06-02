@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pediatric Pneumonia Bayesian Calculator</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Educational prototype v0.1</p>
+        <h1>Pediatric Pneumonia Bayesian Probability Calculator</h1>
+        <p class="lede">
+          Visualize how test results move a clinician-estimated pre-test probability using likelihood ratios.
+        </p>
+      </div>
+      <div class="header-card">
+        <span class="header-card-label">Model</span>
+        <strong>Pre-test odds x LR = post-test odds</strong>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel controls" aria-labelledby="inputs-title">
+        <h2 id="inputs-title">Inputs</h2>
+
+        <div class="field slider-field">
+          <label for="pretest">Clinician pre-test probability</label>
+          <div class="slider-row">
+            <input id="pretest" type="range" min="1" max="99" step="1" value="20" />
+            <output id="pretestOutput" for="pretest">20%</output>
+          </div>
+          <p class="help">Estimate based on history, physical exam, vitals, season, age, and local epidemiology before applying the listed tests.</p>
+        </div>
+
+        <div class="field">
+          <label for="cxrResult">Chest radiograph</label>
+          <select id="cxrResult">
+            <option value="not_done">Not done / do not apply</option>
+            <option value="positive">Positive: infiltrate/consolidation consistent with pneumonia</option>
+            <option value="negative">Negative: no radiographic pneumonia</option>
+            <option value="equivocal">Equivocal / nonspecific</option>
+          </select>
+        </div>
+
+        <div class="grid two">
+          <div class="field">
+            <label for="pct">Procalcitonin <span class="unit">ng/mL</span></label>
+            <input id="pct" type="number" step="0.01" min="0" placeholder="e.g., 0.25" />
+            <p class="help">Threshold used: 0.59 ng/mL.</p>
+          </div>
+
+          <div class="field">
+            <label for="crp">CRP <span class="unit">mg/L</span></label>
+            <input id="crp" type="number" step="1" min="0" placeholder="e.g., 53" />
+            <p class="help">Threshold used: 53 mg/L.</p>
+          </div>
+
+          <div class="field">
+            <label for="wbc">WBC <span class="unit">x10^9/L</span></label>
+            <input id="wbc" type="number" step="0.1" min="0" placeholder="e.g., 13" />
+            <p class="help">Threshold used: 13 x10^9/L.</p>
+          </div>
+
+          <div class="field">
+            <label for="anc">ANC <span class="unit">x10^9/L</span></label>
+            <input id="anc" type="number" step="0.1" min="0" placeholder="e.g., 10" />
+            <p class="help">Threshold used: 10 x10^9/L; limited evidence.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="rppResult">Respiratory pathogen testing</label>
+          <select id="rppResult">
+            <option value="not_done">Not done</option>
+            <option value="negative">Negative panel</option>
+            <option value="viral_only">Viral pathogen detected only</option>
+            <option value="mycoplasma">Mycoplasma pneumoniae detected</option>
+            <option value="pertussis">Bordetella pertussis or parapertussis detected</option>
+            <option value="mixed">Mixed viral + atypical/bacterial detections</option>
+          </select>
+          <p class="help">Includes viral pathogens, Mycoplasma, pertussis, and parapertussis. Numeric adjustment is off by default.</p>
+        </div>
+
+        <label class="checkbox-row">
+          <input id="includeRppHeuristic" type="checkbox" />
+          <span>Apply conservative heuristic LR for respiratory pathogen testing</span>
+        </label>
+
+        <div class="button-row">
+          <button id="resetButton" type="button">Reset</button>
+          <button id="exampleButton" type="button" class="secondary">Load example</button>
+        </div>
+      </section>
+
+      <section class="panel results" aria-labelledby="results-title">
+        <h2 id="results-title">Probability output</h2>
+        <div class="summary-card">
+          <div>
+            <span class="summary-label">Post-test probability</span>
+            <strong id="posttestProbability">20.0%</strong>
+          </div>
+          <div>
+            <span class="summary-label">Absolute change</span>
+            <strong id="absoluteChange">+0.0%</strong>
+          </div>
+        </div>
+
+        <div class="probability-bar-shell" aria-hidden="true">
+          <div id="probabilityBar" class="probability-bar" style="width: 20%"></div>
+        </div>
+
+        <div id="warnings" class="warnings" aria-live="polite"></div>
+
+        <h3>Sequential Bayesian update</h3>
+        <div id="waterfall" class="waterfall"></div>
+      </section>
+    </main>
+
+    <section class="panel wide" aria-labelledby="evidence-title">
+      <div class="section-heading">
+        <h2 id="evidence-title">Applied test effects</h2>
+        <p>Each selected row shows the likelihood ratio used by the current calculation.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Result</th>
+              <th>LR</th>
+              <th>Before</th>
+              <th>After</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="stepsTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel wide" aria-labelledby="notes-title">
+      <h2 id="notes-title">Model notes</h2>
+      <div class="notes-grid">
+        <article>
+          <h3>What this prototype does</h3>
+          <p>
+            Converts the clinician-selected pre-test probability to odds, multiplies by each selected likelihood ratio, and converts back to probability. It is intended for education and model development.
+          </p>
+        </article>
+        <article>
+          <h3>What it does not do</h3>
+          <p>
+            It is not validated for patient-level diagnosis, antibiotic decisions, neonates, immunocompromised children, ICU-level disease, chronic lung disease, or local epidemiology adjustments.
+          </p>
+        </article>
+        <article>
+          <h3>Why respiratory testing is special</h3>
+          <p>
+            Upper-airway PCR can identify pathogens, colonization, shedding, or codetection. Therefore respiratory panel results are interpretation-only by default; the heuristic toggle is for sensitivity analysis.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Not medical advice. Use clinical judgment and local guidelines.</p>
+    </footer>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
