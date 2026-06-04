@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bayesian Updating and Fagan Nomogram | Pediatric Pneumonia Calculator</title>
+    <meta name="description" content="Explanation of Bayesian updating and a Fagan-style nomogram for the pediatric pneumonia probability calculator." />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero explainer-hero">
+        <nav class="topbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html" aria-label="Back to pneumonia probability calculator">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>Pneumonia Probability</span>
+          </a>
+          <div class="top-links">
+            <a class="nav-link" href="index.html">Calculator</a>
+            <span class="version-pill">Explanation page</span>
+          </div>
+        </nav>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">How the model works</p>
+            <h1>Bayesian updating, visually</h1>
+            <p class="lede">
+              A test result changes probability by multiplying the clinician’s pre-test odds by the test’s likelihood ratio. The Fagan nomogram is a graphic shortcut for that same calculation.
+            </p>
+            <div class="hero-actions">
+              <a class="button-link" href="index.html">Back to calculator</a>
+              <span class="mini-chip">Example: 20% pre-test</span>
+              <span class="mini-chip">CXR LR+ 9.5</span>
+            </div>
+          </div>
+
+          <aside class="formula-card">
+            <span class="formula-label">Example</span>
+            <strong>20% → 70%</strong>
+            <p>A positive chest radiograph with LR+ 9.5 moves a 20% pre-test probability to about 70% post-test probability.</p>
+          </aside>
+        </div>
+      </header>
+
+      <main class="explainer-layout">
+        <section aria-label="Bayesian calculation explanation">
+          <article class="explainer-card">
+            <h2>Why likelihood ratios are used</h2>
+            <p>
+              Sensitivity and specificity describe test performance, but clinicians usually need to know how a result changes the probability for this patient. Likelihood ratios are useful because they update pre-test odds directly.
+            </p>
+            <div class="formula-strip" aria-label="Bayesian calculation steps">
+              <div class="formula-step"><code>pre-test odds = p / (1 - p)</code></div>
+              <div class="formula-step"><code>post-test odds = pre-test odds × LR</code></div>
+              <div class="formula-step"><code>post-test probability = odds / (1 + odds)</code></div>
+            </div>
+          </article>
+
+          <article class="explainer-card">
+            <h2>Worked example</h2>
+            <p>
+              If the bedside pre-test probability is 20%, the pre-test odds are 0.20 / 0.80 = 0.25. A positive CXR modeled with LR+ 9.5 gives post-test odds of 0.25 × 9.5 = 2.375. Converting odds back to probability gives 2.375 / 3.375 = 70.4%.
+            </p>
+          </article>
+
+          <article class="explainer-card">
+            <h2>Clinical interpretation</h2>
+            <p>
+              The nomogram and calculator demonstrate probability movement, not a validated patient-level treatment rule. Biomarkers and respiratory PCR results are especially context-dependent, and correlated tests should not be treated as fully independent.
+            </p>
+          </article>
+        </section>
+
+        <section class="nomogram-panel" aria-labelledby="nomogram-title">
+          <h2 id="nomogram-title">Fagan-style nomogram example</h2>
+          <svg class="nomogram-svg" viewBox="0 0 860 620" role="img" aria-labelledby="fagan-title fagan-desc">
+            <title id="fagan-title">Fagan-style nomogram showing pre-test probability, likelihood ratio, and post-test probability</title>
+            <desc id="fagan-desc">A line connects 20 percent pre-test probability through likelihood ratio 9.5 to about 70 percent post-test probability.</desc>
+            <defs>
+              <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#15a46a" />
+                <stop offset="50%" stop-color="#08a7c7" />
+                <stop offset="100%" stop-color="#176bff" />
+              </linearGradient>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#102033" flood-opacity="0.14" />
+              </filter>
+            </defs>
+
+            <rect x="24" y="24" width="812" height="572" rx="24" fill="rgba(255,255,255,0.72)" />
+            <text x="90" y="72" font-size="24" font-weight="800" fill="#102033">Pre-test probability</text>
+            <text x="370" y="72" font-size="24" font-weight="800" fill="#102033">Likelihood ratio</text>
+            <text x="630" y="72" font-size="24" font-weight="800" fill="#102033">Post-test probability</text>
+
+            <g stroke="#9aacbf" stroke-width="3" stroke-linecap="round">
+              <line x1="170" y1="115" x2="170" y2="520" />
+              <line x1="430" y1="115" x2="430" y2="520" />
+              <line x1="700" y1="115" x2="700" y2="520" />
+            </g>
+
+            <g font-size="16" fill="#607086" font-weight="700">
+              <text x="122" y="124">99%</text><text x="122" y="172">90%</text><text x="122" y="225">70%</text>
+              <text x="122" y="318">20%</text><text x="130" y="405">5%</text><text x="130" y="468">1%</text>
+              <text x="130" y="523">0.1%</text>
+
+              <text x="452" y="126">100</text><text x="452" y="182">10</text><text x="452" y="265">2</text>
+              <text x="452" y="320">1</text><text x="452" y="382">0.5</text><text x="452" y="457">0.1</text>
+              <text x="452" y="522">0.01</text>
+
+              <text x="718" y="124">99%</text><text x="718" y="172">90%</text><text x="718" y="225">70%</text>
+              <text x="718" y="318">20%</text><text x="718" y="405">5%</text><text x="718" y="468">1%</text>
+              <text x="718" y="523">0.1%</text>
+            </g>
+
+            <g stroke="#cbd6e4" stroke-width="1.5">
+              <line x1="156" y1="120" x2="184" y2="120" /><line x1="156" y1="168" x2="184" y2="168" />
+              <line x1="156" y1="220" x2="184" y2="220" /><line x1="156" y1="313" x2="184" y2="313" />
+              <line x1="156" y1="400" x2="184" y2="400" /><line x1="156" y1="463" x2="184" y2="463" />
+              <line x1="156" y1="518" x2="184" y2="518" />
+
+              <line x1="416" y1="120" x2="444" y2="120" /><line x1="416" y1="178" x2="444" y2="178" />
+              <line x1="416" y1="260" x2="444" y2="260" /><line x1="416" y1="315" x2="444" y2="315" />
+              <line x1="416" y1="377" x2="444" y2="377" /><line x1="416" y1="452" x2="444" y2="452" />
+              <line x1="416" y1="518" x2="444" y2="518" />
+
+              <line x1="686" y1="120" x2="714" y2="120" /><line x1="686" y1="168" x2="714" y2="168" />
+              <line x1="686" y1="220" x2="714" y2="220" /><line x1="686" y1="313" x2="714" y2="313" />
+              <line x1="686" y1="400" x2="714" y2="400" /><line x1="686" y1="463" x2="714" y2="463" />
+              <line x1="686" y1="518" x2="714" y2="518" />
+            </g>
+
+            <polyline points="170,313 430,180 700,220" fill="none" stroke="url(#lineGradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#softShadow)" />
+            <g>
+              <circle cx="170" cy="313" r="12" fill="#15a46a" stroke="white" stroke-width="4" />
+              <circle cx="430" cy="180" r="12" fill="#08a7c7" stroke="white" stroke-width="4" />
+              <circle cx="700" cy="220" r="12" fill="#176bff" stroke="white" stroke-width="4" />
+            </g>
+
+            <g font-size="18" font-weight="900" fill="#102033">
+              <text x="72" y="304">20%</text>
+              <text x="392" y="160">LR+ 9.5</text>
+              <text x="724" y="214">≈70%</text>
+            </g>
+
+            <rect x="94" y="548" width="672" height="34" rx="17" fill="#e8f0ff" />
+            <text x="124" y="571" font-size="16" font-weight="800" fill="#0f3d87">Example: 20% pre-test probability × positive CXR LR+ 9.5 → about 70% post-test probability</text>
+          </svg>
+          <p class="nomogram-note">
+            This is a Fagan-style teaching graphic. The calculator performs the exact arithmetic directly; the figure shows the same concept visually.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <p>Not medical advice. Use clinical judgment and local guidelines.</p>
+    </footer>
+  </body>
+</html>
