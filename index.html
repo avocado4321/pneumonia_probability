@@ -4,165 +4,220 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pediatric Pneumonia Bayesian Calculator</title>
+    <meta name="description" content="Educational Bayesian pediatric pneumonia probability calculator using likelihood ratios." />
     <link rel="stylesheet" href="src/styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div>
-        <p class="eyebrow">Educational prototype v0.1</p>
-        <h1>Pediatric Pneumonia Bayesian Probability Calculator</h1>
-        <p class="lede">
-          Visualize how test results move a clinician-estimated pre-test probability using likelihood ratios.
-        </p>
-      </div>
-      <div class="header-card">
-        <span class="header-card-label">Model</span>
-        <strong>Pre-test odds x LR = post-test odds</strong>
-      </div>
-    </header>
+    <div class="page-shell">
+      <header class="hero">
+        <nav class="topbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html" aria-label="Pneumonia probability calculator home">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>Pneumonia Probability</span>
+          </a>
+          <span class="version-pill">Educational prototype v0.2</span>
+        </nav>
 
-    <main class="layout">
-      <section class="panel controls" aria-labelledby="inputs-title">
-        <h2 id="inputs-title">Inputs</h2>
-
-        <div class="field slider-field">
-          <label for="pretest">Clinician pre-test probability</label>
-          <div class="slider-row">
-            <input id="pretest" type="range" min="1" max="99" step="1" value="20" />
-            <output id="pretestOutput" for="pretest">20%</output>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Bayesian clinical reasoning</p>
+            <h1>Pediatric Pneumonia Probability Calculator</h1>
+            <p class="lede">
+              Start with your bedside pre-test estimate, then visualize how imaging, inflammatory markers, and respiratory pathogen testing move probability.
+            </p>
+            <div class="hero-actions" aria-label="Calculator notes">
+              <span class="mini-chip">Likelihood ratios</span>
+              <span class="mini-chip">Sequential update</span>
+              <span class="mini-chip">Responsive design</span>
+            </div>
           </div>
-          <p class="help">Estimate based on history, physical exam, vitals, season, age, and local epidemiology before applying the listed tests.</p>
+
+          <aside class="formula-card" aria-label="Bayesian formula">
+            <span class="formula-label">Core model</span>
+            <strong>Pre-test odds × LR = post-test odds</strong>
+            <p>Probabilities are converted to odds, updated by each likelihood ratio, then converted back to probability.</p>
+          </aside>
         </div>
+      </header>
 
-        <div class="field">
-          <label for="cxrResult">Chest radiograph</label>
-          <select id="cxrResult">
-            <option value="not_done">Not done / do not apply</option>
-            <option value="positive">Positive: infiltrate/consolidation consistent with pneumonia</option>
-            <option value="negative">Negative: no radiographic pneumonia</option>
-            <option value="equivocal">Equivocal / nonspecific</option>
-          </select>
+      <main class="app-grid">
+        <section class="panel controls" aria-labelledby="inputs-title">
+          <div class="panel-heading">
+            <span class="step-kicker">Step 1</span>
+            <h2 id="inputs-title">Clinical estimate and tests</h2>
+            <p>Use only tests that are already available for the patient. Blank labs are ignored.</p>
+          </div>
+
+          <div class="field slider-field feature-field">
+            <label for="pretest">Clinician pre-test probability</label>
+            <div class="slider-row">
+              <input id="pretest" type="range" min="1" max="99" step="1" value="20" />
+              <output id="pretestOutput" for="pretest">20%</output>
+            </div>
+            <p class="help">Estimate before applying the listed tests. Consider history, exam, vitals, oxygenation, season, age, and local epidemiology.</p>
+          </div>
+
+          <div class="input-card">
+            <div class="input-card-title">
+              <span class="icon-dot imaging"></span>
+              <h3>Imaging</h3>
+            </div>
+            <div class="field">
+              <label for="cxrResult">Chest radiograph</label>
+              <select id="cxrResult">
+                <option value="not_done">Not done / do not apply</option>
+                <option value="positive">Positive: infiltrate/consolidation consistent with pneumonia</option>
+                <option value="negative">Negative: no radiographic pneumonia</option>
+                <option value="equivocal">Equivocal / nonspecific</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-card">
+            <div class="input-card-title">
+              <span class="icon-dot labs"></span>
+              <h3>Inflammatory markers</h3>
+            </div>
+            <div class="grid two">
+              <div class="field">
+                <label for="pct">Procalcitonin <span class="unit">ng/mL</span></label>
+                <input id="pct" type="number" step="0.01" min="0" inputmode="decimal" placeholder="e.g., 0.25" />
+                <p class="help">Threshold: 0.59 ng/mL.</p>
+              </div>
+
+              <div class="field">
+                <label for="crp">CRP <span class="unit">mg/L</span></label>
+                <input id="crp" type="number" step="1" min="0" inputmode="decimal" placeholder="e.g., 53" />
+                <p class="help">Threshold: 53 mg/L.</p>
+              </div>
+
+              <div class="field">
+                <label for="wbc">WBC <span class="unit">×10⁹/L</span></label>
+                <input id="wbc" type="number" step="0.1" min="0" inputmode="decimal" placeholder="e.g., 13" />
+                <p class="help">Threshold: 13 ×10⁹/L.</p>
+              </div>
+
+              <div class="field">
+                <label for="anc">ANC <span class="unit">×10⁹/L</span></label>
+                <input id="anc" type="number" step="0.1" min="0" inputmode="decimal" placeholder="e.g., 10" />
+                <p class="help">Threshold: 10 ×10⁹/L; limited evidence.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-card">
+            <div class="input-card-title">
+              <span class="icon-dot pathogen"></span>
+              <h3>Respiratory pathogen testing</h3>
+            </div>
+            <div class="field">
+              <label for="rppResult">Panel result</label>
+              <select id="rppResult">
+                <option value="not_done">Not done</option>
+                <option value="negative">Negative panel</option>
+                <option value="viral_only">Viral pathogen detected only</option>
+                <option value="mycoplasma">Mycoplasma pneumoniae detected</option>
+                <option value="pertussis">Bordetella pertussis or parapertussis detected</option>
+                <option value="mixed">Mixed viral + atypical/bacterial detections</option>
+              </select>
+              <p class="help">Includes viral pathogens, Mycoplasma, pertussis, and parapertussis. Numeric adjustment is off by default.</p>
+            </div>
+
+            <label class="checkbox-row">
+              <input id="includeRppHeuristic" type="checkbox" />
+              <span>Apply conservative heuristic LR for respiratory pathogen testing</span>
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="resetButton" type="button">Reset</button>
+            <button id="exampleButton" type="button" class="secondary">Load example</button>
+          </div>
+        </section>
+
+        <section class="panel results" aria-labelledby="results-title">
+          <div class="panel-heading">
+            <span class="step-kicker">Step 2</span>
+            <h2 id="results-title">Probability output</h2>
+            <p>The display updates instantly as inputs change.</p>
+          </div>
+
+          <div class="summary-card">
+            <div>
+              <span class="summary-label">Post-test probability</span>
+              <strong id="posttestProbability">20.0%</strong>
+            </div>
+            <div>
+              <span class="summary-label">Absolute change</span>
+              <strong id="absoluteChange">+0.0%</strong>
+            </div>
+          </div>
+
+          <div class="probability-scale" aria-hidden="true">
+            <div class="scale-labels"><span>0%</span><span>50%</span><span>100%</span></div>
+            <div class="probability-bar-shell">
+              <div id="probabilityBar" class="probability-bar" style="width: 20%"></div>
+            </div>
+          </div>
+
+          <div id="warnings" class="warnings" aria-live="polite"></div>
+
+          <div class="result-section-heading">
+            <h3>Sequential Bayesian update</h3>
+            <p>Each row shows the probability after that test is applied.</p>
+          </div>
+          <div id="waterfall" class="waterfall"></div>
+        </section>
+      </main>
+
+      <section class="panel wide" aria-labelledby="evidence-title">
+        <div class="section-heading">
+          <div>
+            <span class="step-kicker">Step 3</span>
+            <h2 id="evidence-title">Applied test effects</h2>
+          </div>
+          <p>Each selected row shows the likelihood ratio used by the current calculation.</p>
         </div>
-
-        <div class="grid two">
-          <div class="field">
-            <label for="pct">Procalcitonin <span class="unit">ng/mL</span></label>
-            <input id="pct" type="number" step="0.01" min="0" placeholder="e.g., 0.25" />
-            <p class="help">Threshold used: 0.59 ng/mL.</p>
-          </div>
-
-          <div class="field">
-            <label for="crp">CRP <span class="unit">mg/L</span></label>
-            <input id="crp" type="number" step="1" min="0" placeholder="e.g., 53" />
-            <p class="help">Threshold used: 53 mg/L.</p>
-          </div>
-
-          <div class="field">
-            <label for="wbc">WBC <span class="unit">x10^9/L</span></label>
-            <input id="wbc" type="number" step="0.1" min="0" placeholder="e.g., 13" />
-            <p class="help">Threshold used: 13 x10^9/L.</p>
-          </div>
-
-          <div class="field">
-            <label for="anc">ANC <span class="unit">x10^9/L</span></label>
-            <input id="anc" type="number" step="0.1" min="0" placeholder="e.g., 10" />
-            <p class="help">Threshold used: 10 x10^9/L; limited evidence.</p>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="rppResult">Respiratory pathogen testing</label>
-          <select id="rppResult">
-            <option value="not_done">Not done</option>
-            <option value="negative">Negative panel</option>
-            <option value="viral_only">Viral pathogen detected only</option>
-            <option value="mycoplasma">Mycoplasma pneumoniae detected</option>
-            <option value="pertussis">Bordetella pertussis or parapertussis detected</option>
-            <option value="mixed">Mixed viral + atypical/bacterial detections</option>
-          </select>
-          <p class="help">Includes viral pathogens, Mycoplasma, pertussis, and parapertussis. Numeric adjustment is off by default.</p>
-        </div>
-
-        <label class="checkbox-row">
-          <input id="includeRppHeuristic" type="checkbox" />
-          <span>Apply conservative heuristic LR for respiratory pathogen testing</span>
-        </label>
-
-        <div class="button-row">
-          <button id="resetButton" type="button">Reset</button>
-          <button id="exampleButton" type="button" class="secondary">Load example</button>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Result</th>
+                <th>LR</th>
+                <th>Before</th>
+                <th>After</th>
+                <th>Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="stepsTable"></tbody>
+          </table>
         </div>
       </section>
 
-      <section class="panel results" aria-labelledby="results-title">
-        <h2 id="results-title">Probability output</h2>
-        <div class="summary-card">
+      <section class="panel wide model-notes" aria-labelledby="notes-title">
+        <div class="section-heading">
           <div>
-            <span class="summary-label">Post-test probability</span>
-            <strong id="posttestProbability">20.0%</strong>
-          </div>
-          <div>
-            <span class="summary-label">Absolute change</span>
-            <strong id="absoluteChange">+0.0%</strong>
+            <span class="step-kicker">Scope</span>
+            <h2 id="notes-title">Model notes</h2>
           </div>
         </div>
-
-        <div class="probability-bar-shell" aria-hidden="true">
-          <div id="probabilityBar" class="probability-bar" style="width: 20%"></div>
+        <div class="notes-grid">
+          <article>
+            <h3>What this prototype does</h3>
+            <p>Converts the clinician-selected pre-test probability to odds, multiplies by each selected likelihood ratio, and converts back to probability.</p>
+          </article>
+          <article>
+            <h3>What it does not do</h3>
+            <p>It is not validated for patient-level diagnosis, antibiotic decisions, neonates, immunocompromised children, ICU-level disease, chronic lung disease, or local epidemiology adjustments.</p>
+          </article>
+          <article>
+            <h3>Why respiratory testing is special</h3>
+            <p>Upper-airway PCR can identify pathogens, colonization, shedding, or codetection. Respiratory panel results are interpretation-only by default.</p>
+          </article>
         </div>
-
-        <div id="warnings" class="warnings" aria-live="polite"></div>
-
-        <h3>Sequential Bayesian update</h3>
-        <div id="waterfall" class="waterfall"></div>
       </section>
-    </main>
-
-    <section class="panel wide" aria-labelledby="evidence-title">
-      <div class="section-heading">
-        <h2 id="evidence-title">Applied test effects</h2>
-        <p>Each selected row shows the likelihood ratio used by the current calculation.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Step</th>
-              <th>Result</th>
-              <th>LR</th>
-              <th>Before</th>
-              <th>After</th>
-              <th>Evidence</th>
-            </tr>
-          </thead>
-          <tbody id="stepsTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel wide" aria-labelledby="notes-title">
-      <h2 id="notes-title">Model notes</h2>
-      <div class="notes-grid">
-        <article>
-          <h3>What this prototype does</h3>
-          <p>
-            Converts the clinician-selected pre-test probability to odds, multiplies by each selected likelihood ratio, and converts back to probability. It is intended for education and model development.
-          </p>
-        </article>
-        <article>
-          <h3>What it does not do</h3>
-          <p>
-            It is not validated for patient-level diagnosis, antibiotic decisions, neonates, immunocompromised children, ICU-level disease, chronic lung disease, or local epidemiology adjustments.
-          </p>
-        </article>
-        <article>
-          <h3>Why respiratory testing is special</h3>
-          <p>
-            Upper-airway PCR can identify pathogens, colonization, shedding, or codetection. Therefore respiratory panel results are interpretation-only by default; the heuristic toggle is for sensitivity analysis.
-          </p>
-        </article>
-      </div>
-    </section>
+    </div>
 
     <footer class="site-footer">
       <p>Not medical advice. Use clinical judgment and local guidelines.</p>
