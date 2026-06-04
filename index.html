@@ -17,7 +17,7 @@
           </a>
           <div class="top-links">
             <a class="nav-link" href="explain.html">Bayes + Fagan nomogram</a>
-            <span class="version-pill">Educational prototype v0.2</span>
+            <span class="prototype-label">Educational prototype v0.2</span>
           </div>
         </nav>
 
@@ -28,12 +28,9 @@
             <p class="lede">
               Start with your bedside pre-test estimate, then visualize how imaging, inflammatory markers, and respiratory pathogen testing move probability.
             </p>
-            <div class="hero-actions" aria-label="Calculator notes">
-              <span class="mini-chip">Likelihood ratios</span>
-              <span class="mini-chip">Sequential update</span>
-              <span class="mini-chip">Responsive design</span>
-              <a class="mini-chip" href="explain.html">View explanation</a>
-            </div>
+            <p class="explanation-cta">
+              Want to learn more about how this works? <a href="explain.html">View explanation</a>
+            </p>
           </div>
 
           <aside class="formula-card" aria-label="Bayesian formula">
@@ -55,8 +52,13 @@
           <div class="field slider-field feature-field">
             <label for="pretest">Clinician pre-test probability</label>
             <div class="slider-row">
-              <input id="pretest" type="range" min="1" max="99" step="1" value="20" />
+              <input id="pretest" type="range" min="0" max="100" step="10" value="20" />
               <output id="pretestOutput" for="pretest">20%</output>
+            </div>
+            <div class="slider-bands" aria-hidden="true">
+              <span>Low</span>
+              <span>Medium</span>
+              <span>High</span>
             </div>
             <p class="help">Estimate before applying the listed tests. Consider history, exam, vitals, oxygenation, season, age, and local epidemiology.</p>
           </div>
